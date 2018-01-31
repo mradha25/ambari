@@ -478,7 +478,7 @@ public class ResponseDataGenerator {
       if (count.getName() != null) {
         String label = componetnLabels.get(count.getName());
         String fallbackedLabel = labelFallbackHandler.fallbackIfRequired(count.getName(), label, true, false, true);
-        result.put(count.getName(), componetnLabels.get(count.getName()));
+        result.put(count.getName(), fallbackedLabel);
       }
     }
     return result;
