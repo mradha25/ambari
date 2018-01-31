@@ -633,15 +633,15 @@ public class ServiceLogsManager extends ManagerBase<ServiceLogData, ServiceLogRe
 
 
   public ServiceComponentMetadataWrapper getComponentMetadata(String clusters) {
+    String pivotFields = COMPONENT + ",group";
     SolrQuery solrQuery = new SolrQuery();
     solrQuery.setQuery("*:*");
-    solrQuery.setRows(9999);
-    solrQuery.setFields(COMPONENT);
-    solrQuery.set("group", true);
-    solrQuery.set("group.field", "group");
+    solrQuery.setRows(0);
+    solrQuery.set("facet", true);
+    solrQuery.set("facet.pivot", pivotFields);
     SolrUtil.addListFilterToSolrQuery(solrQuery, CLUSTER, clusters);
     QueryResponse queryResponse = serviceLogsSolrDao.process(solrQuery, "/serivce/logs/components");
     return responseDataGenerator.generateGroupedComponentMetadataResponse(
-      queryResponse, uiMappingConfig.getServiceGroupLabels(), uiMappingConfig.getServiceComponentLabels());
+      queryResponse, pivotFields, uiMappingConfig.getServiceGroupLabels(), uiMappingConfig.getServiceComponentLabels());
   }
 }

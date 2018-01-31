@@ -50,9 +50,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
-import org.apache.solr.client.solrj.response.Group;
-import org.apache.solr.client.solrj.response.GroupCommand;
-import org.apache.solr.client.solrj.response.GroupResponse;
 import org.apache.solr.client.solrj.response.PivotField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.RangeFacet;
@@ -487,7 +484,7 @@ public class ResponseDataGenerator {
     return result;
   }
 
-  public ServiceComponentMetadataWrapper generateGroupedComponentMetadataResponse(QueryResponse queryResponse,
+  public ServiceComponentMetadataWrapper generateGroupedComponentMetadataResponse(QueryResponse queryResponse, String pivotFields,
                                                                                   Map<String, String> groupLabels,
                                                                                   Map<String, String> componentLabels) {
     List<ComponentMetadata> componentMetadata = new ArrayList<>();
@@ -496,36 +493,32 @@ public class ResponseDataGenerator {
     if (queryResponse == null) {
       return new ServiceComponentMetadataWrapper(componentMetadata, groupsMetadata);
     }
-    GroupResponse groupResponse = queryResponse.getGroupResponse();
-    if (groupResponse == null) {
+    NamedList<List<PivotField>> facetPivotResponse = queryResponse.getFacetPivot();
+    if (facetPivotResponse == null || facetPivotResponse.size() < 1) {
       return new ServiceComponentMetadataWrapper(componentMetadata, groupsMetadata);
     }
-    List<GroupCommand> groupCommands = groupResponse.getValues();
-    if (CollectionUtils.isEmpty(groupCommands) || CollectionUtils.isEmpty(groupCommands.get(0).getValues())) {
+    if (CollectionUtils.isEmpty(facetPivotResponse.get(pivotFields))) {
       return new ServiceComponentMetadataWrapper(componentMetadata, groupsMetadata);
     }
-    List<Group> groups = groupCommands.get(0).getValues();
-    for (Group group : groups) {
-      if (!CollectionUtils.isEmpty(group.getResult())) {
-        if (group.getGroupValue() != null) {
-          groupsMetadata.put(group.getGroupValue(), groupLabels.getOrDefault(group.getGroupValue(), null));
-        }
-        for (SolrDocument document : group.getResult()) {
-          convertAndAddSolrDocumentToComponentMetadata(document, componentMetadata, group.getGroupValue(), componentLabels);
-        }
-      }
-    }
-    return new ServiceComponentMetadataWrapper(componentMetadata, groupsMetadata);
-  }
 
-  private void convertAndAddSolrDocumentToComponentMetadata(SolrDocument solrDocument, List<ComponentMetadata> componentMetadata,
-                                                            String group, Map<String, String> serviceComponentLabels) {
-    for (Map.Entry<String, Object> entry : solrDocument.entrySet()) {
-      if (entry.getValue() != null) {
-        String label = serviceComponentLabels.get(entry.getValue().toString());
-        String fallbackedLabel = labelFallbackHandler.fallbackIfRequired(entry.getValue().toString(), label, true, false, true);
-        componentMetadata.add((new ComponentMetadata(entry.getValue().toString(), fallbackedLabel, group)));
+    for (PivotField pivotField : facetPivotResponse.get(pivotFields)) {
+      if (pivotField != null && pivotField.getValue() != null) {
+        String componentName = pivotField.getValue().toString();
+        String groupName = null;
+        if (CollectionUtils.isNotEmpty(pivotField.getPivot())) {
+          Object groupValue = pivotField.getPivot().get(0).getValue();
+          if (groupValue != null) {
+            groupName = groupValue.toString();
+            groupsMetadata.put(groupName, groupLabels.getOrDefault(groupName, null));
+          }
+        }
+        String label = componentLabels.get(componentName);
+        String fallbackedLabel = labelFallbackHandler.fallbackIfRequired(componentName, label, true, false, true);
+        componentMetadata.add((new ComponentMetadata(componentName, fallbackedLabel, groupName)));
+
       }
     }
+
+    return new ServiceComponentMetadataWrapper(componentMetadata, groupsMetadata);
   }
 }
