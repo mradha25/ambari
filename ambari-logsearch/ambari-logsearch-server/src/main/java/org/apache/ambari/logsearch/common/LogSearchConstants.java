@@ -65,7 +65,7 @@ public class LogSearchConstants {
   public static final String SERVICE_GROUP_LABELS_DEFAULTS = "";
   public static final String SERVICE_COMPONENT_LABELS_DEFAULTS = "";
   public static final String SERVICE_FIELD_LABELS_DEFAULTS = "log_message:Message,type:Component,logtime:Log Time,thread_name:Thread";
-  public static final String SERVICE_FIELD_VISIBLE_DEFAULTS = "";
+  public static final String SERVICE_FIELD_VISIBLE_DEFAULTS = "log_message,level,logtime,type";
   public static final String SERVICE_FIELD_EXCLUDES_DEFAULTS = "id,tags,text,message,seq_num,case_id,bundle_id,rowtype,event_count";
   public static final String SERVICE_FIELD_FILTERABLE_EXLUDE_DEFAULTS = "";
   public static final String SERVICE_FIELD_FALLBACK_PREFIX_DEFAULTS = "ws_,sdi_";
@@ -76,7 +76,7 @@ public class LogSearchConstants {
   public static final String AUDIT_FIELD_COMMON_LABELS_DEFAULTS = "enforcer:Access Enforcer,access:Access Type,cliIP:Client Ip,cliType:Client Type," +
     "dst:DST,evtTime:Event Time,ip:IP,logtime:Log Time,sess:Session,ugi:UGI,reqUser:User";
   public static final String AUDIT_FIELD_VISIBLE_DEFAULTS = "";
-  public static final String AUDIT_FIELD_VISIBLE_COMMON_DEFAULTS = "";
+  public static final String AUDIT_FIELD_VISIBLE_COMMON_DEFAULTS = "access,cliIP,evtTime,repo,resource,result,reqUser";
   public static final String AUDIT_FIELD_EXCLUDES_DEFAULTS = "";
   public static final String AUDIT_FIELD_EXCLUDES_COMMON_DEFAULTS = "tags,tags_str,seq_num";
   public static final String AUDIT_FIELD_FILTERABLE_EXCLUDES_DEFAULTS = "";
