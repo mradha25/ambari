@@ -69,6 +69,7 @@ import org.apache.ambari.server.state.SecurityType;
 import org.apache.ambari.server.state.Service;
 import org.apache.ambari.server.state.ServiceComponentFactory;
 import org.apache.ambari.server.state.ServiceComponentHostFactory;
+import org.apache.ambari.server.state.ServiceDependencyType;
 import org.apache.ambari.server.state.ServiceFactory;
 import org.apache.ambari.server.state.ServiceGroup;
 import org.apache.ambari.server.state.StackId;
@@ -364,7 +365,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> requests = new HashSet<>();
     ServiceDependencyRequest request = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            cluster1, serviceGroupCore.getServiceGroupName(), yarn.getName(), null);
+            cluster1, serviceGroupCore.getServiceGroupName(), yarn.getName(), null, ServiceDependencyType.INSTALL);
     requests.add(request);
 
     ServiceDependencyResourceProvider serviceDependencyResourceProvider = new ServiceDependencyResourceProvider(controller);
@@ -395,7 +396,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> requests = new HashSet<>();
     ServiceDependencyRequest request = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            cluster1, serviceGroupTest.getServiceGroupName(), zookeeper.getName(), null);
+            cluster1, serviceGroupTest.getServiceGroupName(), zookeeper.getName(), null, ServiceDependencyType.INSTALL);
     requests.add(request);
 
     ServiceDependencyResourceProvider serviceDependencyResourceProvider = new ServiceDependencyResourceProvider(controller);
@@ -424,7 +425,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> requests = new HashSet<>();
     ServiceDependencyRequest request = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            cluster1, "invalid_service_group_name", zookeeper.getName(), null);
+            cluster1, "invalid_service_group_name", zookeeper.getName(), null, ServiceDependencyType.INSTALL);
     requests.add(request);
 
     ServiceDependencyResourceProvider serviceDependencyResourceProvider = new ServiceDependencyResourceProvider(controller);
@@ -454,7 +455,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> requests = new HashSet<>();
     ServiceDependencyRequest request = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            "invalid_cluster_name", serviceGroupCore.getServiceGroupName(), zookeeper.getName(), null);
+            "invalid_cluster_name", serviceGroupCore.getServiceGroupName(), zookeeper.getName(), null, ServiceDependencyType.INSTALL);
     requests.add(request);
 
     ServiceDependencyResourceProvider serviceDependencyResourceProvider = new ServiceDependencyResourceProvider(controller);
@@ -485,7 +486,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> requests = new HashSet<>();
     ServiceDependencyRequest request = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            cluster1, serviceGroupCore.getServiceGroupName(), yarn.getName(), null);
+            cluster1, serviceGroupCore.getServiceGroupName(), yarn.getName(), null, ServiceDependencyType.INSTALL);
     requests.add(request);
 
     ServiceDependencyResourceProvider serviceDependencyResourceProvider = new ServiceDependencyResourceProvider(controller);
@@ -504,7 +505,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> deleteRequests = new HashSet<>();
     ServiceDependencyRequest deleteRequest = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            null, null, null, serviceDependencyResponse.getDependencyId());
+            null, null, null, serviceDependencyResponse.getDependencyId(), ServiceDependencyType.INSTALL);
     deleteRequests.add(deleteRequest);
 
     serviceDependencyResourceProvider.deleteServiceDependencies(deleteRequests);
@@ -526,7 +527,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> requests = new HashSet<>();
     ServiceDependencyRequest request = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            cluster1, serviceGroupCore.getServiceGroupName(), yarn.getName(), null);
+            cluster1, serviceGroupCore.getServiceGroupName(), yarn.getName(), null, ServiceDependencyType.INSTALL);
     requests.add(request);
 
     ServiceDependencyResourceProvider serviceDependencyResourceProvider = new ServiceDependencyResourceProvider(controller);
@@ -545,7 +546,7 @@ public class ServiceDependencyResourceProviderTest {
 
     Set<ServiceDependencyRequest> getRequests = new HashSet<>();
     ServiceDependencyRequest getRequest = new ServiceDependencyRequest(cluster1, hdfs.getName(), serviceGroupCore.getServiceGroupName(),
-            null, null, null, serviceDependencyResponse.getDependencyId());
+            null, null, null, serviceDependencyResponse.getDependencyId(), ServiceDependencyType.INSTALL);
 
     Set<ServiceDependencyResponse> getResponses = serviceDependencyResourceProvider.getServiceDependencies(getRequests);
 
